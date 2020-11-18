@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.11.17)  17 NOV 2020 21:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.11.17)  17 NOV 2020 21:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -45,92 +45,69 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 2.
 LaTeX Font Info:    ... okay on input line 2.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 2.
 LaTeX Font Info:    ... okay on input line 2.
-
-Overfull \hbox (20.9221pt too wide) in paragraph at lines 3--20
-\OT1/cmr/m/n/10 4. My github repo for this as-sign-ment is: https://github.com/
-hyunseo6579/Gomoku-
- []
-
-
-Overfull \hbox (117.43143pt too wide) in paragraph at lines 3--20
-\OT1/cmr/m/n/10 self how to cre-ate the win-dow and han-dle events with Pygame:
- https://github.com/hyunseo6579/Graduate-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 3--20
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 3--20
-
- []
-
-[1
+ [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 
-Overfull \hbox (1.77838pt too wide) in paragraph at lines 21--64
+Overfull \hbox (1.77838pt too wide) in paragraph at lines 24--67
 []\OT1/cmr/m/n/10 - Move pri-or-i-tized de-fend-ing over win-ning the game, so 
 added an-other method
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--64
+Underfull \hbox (badness 10000) in paragraph at lines 24--67
 
  []
 
 [2] [3] (./a4_report.aux) ) 
 Here is how much of TeX's memory you used:
- 366 strings out of 483183
- 6239 string characters out of 5966291
- 238602 words of memory out of 5000000
- 15464 multiletter control sequences out of 15000+600000
- 532673 words of font info for 25 fonts, out of 8000000 for 9000
+ 363 strings out of 483183
+ 6205 string characters out of 5966291
+ 236602 words of memory out of 5000000
+ 15462 multiletter control sequences out of 15000+600000
+ 532338 words of font info for 24 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 25i,4n,19p,1622b,97s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/mari/.texlive2019/texmf-var/fonts/pk/ljfour/
-jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/am
+ 25i,4n,19p,1267b,97s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmr10.pfb>
-Output written on a4_report.pdf (3 pages, 29376 bytes).
+Output written on a4_report.pdf (3 pages, 28486 bytes).
 PDF statistics:
- 23 PDF objects out of 1000 (max. 8388607)
- 15 compressed objects within 1 object stream
+ 18 PDF objects out of 1000 (max. 8388607)
+ 11 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
