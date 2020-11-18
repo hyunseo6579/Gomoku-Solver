@@ -10,10 +10,14 @@ def main():
     pygame.display.set_caption("Gomoku_Assignment4_MaristellaJho")
     window = pygame.display.set_mode((700,700))
     playBtn = pygame.image.load("assets/play.png")
+
     title = Title(window)
     game = Game(window)
     playerMove = Player(window)
     solver = Solver(window)
+
+    # status -1 = game playing, 0 = draw, 1 = black won, 2 = white won
+    status = -1
 
     # black goes first, and player always starts off
     player = 0
@@ -49,18 +53,25 @@ def main():
         if player == 1:
             if solver.checkProgress(moveBoard) == 0:
                 solver.makeMove(moveBoard)
-                player = 0
+                if solver.checkProgress(moveBoard) == 0:
+                    player = 0
+                elif solver.checkProgress(moveBoard) == -1:
+                    status = 0
+                elif solver.checkProgress(moveBoard) == 1:
+                    status = 1
+                else:
+                    status = 2
             elif solver.checkProgress(moveBoard) == -1:
-                print("end game, it's a draw")
+                status = 0
             elif solver.checkProgress(moveBoard) == 1:
-                print("end game, black won")
+                status = 1
             else:
-                print("end game, white won")
+                status = 2
 
         if frame == 0:
             title.blit()
         if frame == 1:
-            game.blit(board,moveBoard)
+            game.blit(board,moveBoard, status)
 
         pygame.display.update()
 
@@ -84,8 +95,11 @@ class Game:
         self.board = pygame.image.load("assets/9x9.jpg")
         self.black = pygame.image.load("assets/black.png")
         self.white = pygame.image.load("assets/white.png")
+        self.win = pygame.image.load("assets/win.png")
+        self.lose = pygame.image.load("assets/lose.png")
+        self.draw = pygame.image.load("assets/draw.png")
 
-    def blit(self, board, moveBoard):
+    def blit(self, board, moveBoard, status):
         self.window.blit(self.board,(0,0))
 
         for i in range(9):
@@ -94,6 +108,13 @@ class Game:
                     self.window.blit(self.black,board[i][j])
                 elif moveBoard[i][j] == 2:
                     self.window.blit(self.white,board[i][j])
+
+        if status == 0:
+            self.window.blit(self.draw,(150,250))
+        elif status == 1:
+            self.window.blit(self.win,(150,250))
+        elif status == 2:
+            self.window.blit(self.lose,(150,250))
 
 
 # decide whether to accept player moves
@@ -181,21 +202,81 @@ class Solver:
         return 0
 
     def makeMove(self, board):
-        if self.defend(board):
+        if self.winningMove(board):
+            return
+        elif self.defend(board):
             return
         else:
             self.move(board)
             return
 
-## not yet tested
+    def winningMove(self, board):
+        # check for any rows of 4s that can be made into rows of 5 which automatically wins the game
+
+        # check for horizontal
+        for i in range(2, 7):
+            for j in range(9):
+                if (board[i][j] == 2 and board[i - 1][j] == 2 and board[i + 1][j] == 2 and board[i - 2][j] == 2 and board[i + 2][j] == 0)\
+                        or (board[i][j] == 2 and board[i - 1][j] == 2 and board[i + 1][j] == 2 and board[i - 2][j] == 0 and board[i + 2][j] == 2):
+                    if board[i-2][j] == 0:
+                        board[i-2][j] = 2
+                        return True
+                    elif board[i + 2][j] == 0:
+                        board[i + 2][j] = 2
+                        return True
+
+        # check for vertical
+        for i in range(9):
+            for j in range(2, 7):
+                if (board[i][j] == 2 and board[i][j - 1] == 2 and board[i][j + 1] == 2 and board[i][j - 2] == 2 and board[i][j + 2] == 0)\
+                        or (board[i][j] == 2 and board[i][j - 1] == 2 and board[i][j + 1] == 2 and board[i][j - 2] == 0 and board[i][j + 2] == 2):
+                    if board[i][j-2] == 0:
+                        board[i][j-2] = 2
+                        return True
+                    elif board[i][j+2] == 0:
+                        board[i][j+2] = 2
+                        return True
+
+        # check for both diagonal
+        for i in range(2, 7):
+            for j in range(2, 7):
+                if (board[i][j] == 2 and board[i - 1][j - 1] == 2 and board[i + 1][j + 1] == 2 and board[i - 2][j - 2] == 2 and board[i + 2][j + 2] == 0)\
+                        or (board[i][j] == 2 and board[i - 1][j - 1] == 2 and board[i + 1][j + 1] == 2 and board[i - 2][j - 2] == 0 and board[i + 2][j + 2] == 2):
+                    if board[i-2][j-2] == 0:
+                        board[i-2][j-2] = 2
+                        return True
+                    elif board[i+2][j+2] == 0:
+                        board[i+2][j+2] = 2
+                        return True
+                elif (board[i][j] == 2 and board[i - 1][j + 1] == 2 and board[i + 1][j - 1] == 2 and board[i - 2][j + 2] == 2 and board[i + 2][j - 2] == 0)\
+                        or (board[i][j] == 2 and board[i - 1][j + 1] == 2 and board[i + 1][j - 1] == 2 and board[i - 2][j + 2] == 0 and board[i + 2][j - 2] == 2):
+                    if board[i - 2][j + 2] == 0:
+                        board[i - 2][j + 2] = 2
+                        return True
+                    elif board[i + 2][j - 2] == 0:
+                        board[i + 2][j - 2] = 2
+                        return True
+
+        return False
+
     def defend(self, board):
         # find any rows of 3 or more (that can become 5) and defend
         # if row of 4 is found with no defend on one end, return False (since no defense move will work anyway)
 
+        # update: row of 3 with open spots on each end OR row of 4 with 1 open
+
         # check for horizontal 3
         for i in range(2,7):
             for j in range(9):
-                if board[i][j] == 1 and board[i-1][j] == 1 and board[i+1][j] == 1:
+                if board[i][j] == 1 and board[i-1][j] == 1 and board[i+1][j] == 1 and board[i-2][j] == 0 and board[i+2][j] == 0:
+                    if board[i-2][j] == 0:
+                        board[i-2][j] = 2
+                        return True
+                    elif board[i+2][j] == 0:
+                        board[i+2][j] = 2
+                        return True
+                elif (board[i][j] == 1 and board[i-1][j] == 1 and board[i+1][j] == 1 and board[i-2][j] == 1 and board[i+2][j] == 0) or \
+                        (board[i][j] == 1 and board[i-1][j] == 1 and board[i+1][j] == 1 and board[i-2][j] == 0 and board[i+2][j] == 1):
                     if board[i-2][j] == 0:
                         board[i-2][j] = 2
                         return True
@@ -206,7 +287,16 @@ class Solver:
         # check for vertical 3
         for i in range(9):
             for j in range(2,7):
-                if board[i][j] == 1 and board[i][j-1] == 1 and board[i][j+1] == 1:
+                if board[i][j] == 1 and board[i][j-1] == 1 and board[i][j+1] == 1 and board[i][j-2] == 0 and board[i][j+2] == 0:
+                    if board[i][j-2] == 0:
+                        board[i][j-2] = 2
+                        return True
+                    elif board[i][j+2] == 0:
+                        board[i][j+2] = 2
+                        return True
+                elif (board[i][j] == 1 and board[i][j-1] == 1 and board[i][j+1] == 1 and
+                        board[i][j-2] == 1 and board[i][j+2] == 0) or ( board[i][j] == 1 and board[i][j-1] == 1 and board[i][j+1] == 1 and
+                        board[i][j-2] == 0 and board[i][j+2] == 1):
                     if board[i][j-2] == 0:
                         board[i][j-2] = 2
                         return True
@@ -218,14 +308,28 @@ class Solver:
         for i in range(2,7):
             for j in range(2,7):
                 # check both diagonals of 1
-                if board[i][j] == 1 and board[i-1][j-1] == 1 and board[i+1][j+1] == 1:
+                if board[i][j] == 1 and board[i-1][j-1] == 1 and board[i+1][j+1] == 1 and board[i-2][j-2] == 0 and board[i+2][j+2] == 0:
                     if board[i-2][j-2] == 0:
                         board[i-2][j-2] = 2
                         return True
                     elif board[i+2][j+2] == 0:
                         board[i + 2][j + 2] = 2
                         return True
-                elif board[i][j] == 1 and board[i-1][j+1] == 1 and board[i+1][j-1] == 1:
+                elif board[i][j] == 1 and board[i-1][j+1] == 1 and board[i+1][j-1] == 1 and board[i-2][j+2] == 0 and board[i+2][j-2] == 0:
+                    if board[i - 2][j + 2] == 0:
+                        board[i - 2][j + 2] = 2
+                        return True
+                    elif board[i + 2][j - 2] == 0:
+                        board[i + 2][j - 2] = 2
+                        return True
+                elif (board[i][j] == 1 and board[i-1][j-1] == 1 and board[i+1][j+1] == 1 and board[i-2][j-2] == 1 and board[i+2][j+2] == 0) or (board[i][j] == 1 and board[i-1][j-1] == 1 and board[i+1][j+1] == 1 and board[i-2][j-2] == 0 and board[i+2][j+2] == 1):
+                    if board[i-2][j-2] == 0:
+                        board[i-2][j-2] = 2
+                        return True
+                    elif board[i+2][j+2] == 0:
+                        board[i + 2][j + 2] = 2
+                        return True
+                elif (board[i][j] == 1 and board[i-1][j+1] == 1 and board[i+1][j-1] == 1 and board[i-2][j+2] == 1 and board[i+2][j-2] == 0) or (board[i][j] == 1 and board[i-1][j+1] == 1 and board[i+1][j-1] == 1 and board[i-2][j+2] == 0 and board[i+2][j-2] == 1):
                     if board[i - 2][j + 2] == 0:
                         board[i - 2][j + 2] = 2
                         return True
@@ -239,8 +343,78 @@ class Solver:
     def move(self, board):
         # find any of solver's stone that can be turned into a connected 5
         # if not, find any spot that has empty 5
+        # basically find any row of 5 that does not have black stone on ut
         # if not (in this case it would be lose or draw), place anywhere
-        pass
+
+        # check for horizontal 5
+        for i in range(2,7):
+            for j in range(9):
+                if board[i][j] != 1 and board[i-1][j] != 1 and board[i+1][j] != 1 and board[i-2][j] != 1 and board[i+2][j] != 1:
+                    # no whites are in this row of 5, place the black stone from center -> outwards
+                    if board[i][j] == 0:
+                        board[i][j] = 2
+                    elif board[i-1][j] == 0:
+                        board[i-1][j] = 2
+                    elif board[i+1][j] == 0:
+                        board[i+1][j] = 2
+                    elif board[i-2][j] == 0:
+                        board[i-2][j] = 2
+                    elif board[i+2][j] == 0:
+                        board[i+2][j] = 2
+                    return
+
+        # check for vertical 5
+        for i in range(9):
+            for j in range(2,7):
+                if board[i][j] != 1 and board[i][j-1] != 1 and board[i][j+1] != 1 and board[i][j-2] != 1 and \
+                        board[i][j+2] != 1:
+                    # find empty spot, and place black
+                    if board[i][j] == 0:
+                        board[i][j] = 2
+                    elif board[i][j-1] == 0:
+                        board[i][j-1] = 2
+                    elif board[i][j+1] == 0:
+                        board[i][j+1] = 2
+                    elif board[i][j-2] == 0:
+                        board[i][j-2] = 2
+                    elif board[i][j+2] == 0:
+                        board[i][j+2] = 2
+                    return
+
+        # check for both diagonal 5s
+        for i in range(2,7):
+            for j in range(2,7):
+                if board[i][j] != 1 and board[i-1][j-1] != 1 and board[i+1][j+1] != 1 and board[i-2][j-2] != 1 and board[i+2][j+2] != 1:
+                    if board[i][j] == 0:
+                        board[i][j] = 2
+                    elif board[i-1][j - 1] == 0:
+                        board[i-1][j - 1] = 2
+                    elif board[i+1][j + 1] == 0:
+                        board[i+1][j + 1] = 2
+                    elif board[i-2][j - 2] == 0:
+                        board[i-2][j - 2] = 2
+                    elif board[i+2][j + 2] == 0:
+                        board[i+2][j + 2] = 2
+                    return
+                elif board[i][j] != 1 and board[i-1][j+1] != 1 and board[i+1][j-1] != 1 and board[i-2][j+2] != 1 and board[i+2][j-2] != 1:
+                    if board[i][j] == 0:
+                        board[i][j] = 2
+                    elif board[i+1][j - 1] == 0:
+                        board[i+1][j - 1] = 2
+                    elif board[i-1][j + 1] == 0:
+                        board[i-1][j + 1] = 2
+                    elif board[i+2][j - 2] == 0:
+                        board[i+2][j - 2] = 2
+                    elif board[i-2][j + 2] == 0:
+                        board[i-2][j + 2] = 2
+                    return
+
+        # if no possible tactical moves left, just place stone on any empty spots
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == 0:
+                    board[i][j] = 2
+                    return
 
 
 main()
